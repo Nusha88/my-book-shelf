@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <b-button v-b-modal.modal1>Add Book</b-button>
+  <div class="text-center">
+    <b-button class="popup-button" v-b-modal.modal1>Add Book</b-button>
     <!-- Modal Component -->
     <b-modal id="modal1" title="Add Book" ref="modal">
       <b-form-group>
@@ -82,7 +82,11 @@
 </template>
 
 <script>
+  import {uuid} from 'vue-uuid';
+  import firebase from 'firebase';
+
   export default {
+
     data: function () {
       return {
         book: {
@@ -101,11 +105,7 @@
         ],
         title: '',
         author: '',
-        genre: '',
-        books1Arr: [],
-        books2Arr: [],
-        books3Arr: [],
-        books4Arr: []
+        genre: ''
       }
     },
     methods: {
@@ -120,41 +120,8 @@
           selected: this.selected,
           value: this.value
         };
-
-        this.checkBooksLenght();
-
         this.books.push(this.book);
-        if (this.books1Arr.length < 7) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books1.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else if (this.books2Arr.length < 3) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books2.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else if (this.books3Arr.length < 8) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books3.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else if (this.books4Arr.length < 5) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books4.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else {
-          alert("Your bookshelf is full! Delete something!")
-        }
+        this.writeNewPost();
 
         this.title = '';
         this.author = '';
@@ -163,55 +130,17 @@
         this.$root.$emit('addBook', this.book);
         this.hidePopup();
       },
-      checkBooksLenght() {
-        this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books1.json').then(response => {
-          return response.json();
-        })
-          .then(data => {
-            const books1Arr = [];
-            for (let i in data) {
-              books1Arr.push(data[i]);
-              this.books1Arr = books1Arr;
-              console.log(books1Arr.length + '1');
-            }
-          });
-        if (this.books1Arr.length = 7) {
-          this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books2.json').then(response => {
-            return response.json();
-          })
-            .then(data2 => {
-              const books2Arr = [];
-              for (let i in data2) {
-                books2Arr.push(data2[i]);
-                this.books2Arr = books2Arr;
-                console.log(books2Arr.length + '2')
-              }
-            })
-        } else if (this.books2Arr.length = 3) {
-          this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books3.json').then(response => {
-            return response.json();
-          })
-            .then(data3 => {
-              const books3Arr = [];
-              for (let i in data3) {
-                books3Arr.push(data3[i]);
-                this.books3Arr = books3Arr;
-                console.log(books3Arr.length + '3')
-              }
-            })
-        } else if (this.books3Arr.length = 8) {
-          this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books4.json').then(response => {
-            return response.json();
-          })
-            .then(data4 => {
-              const books4Arr = [];
-              for (let i in data4) {
-                books4Arr.push(data4[i]);
-                this.books4Arr = books4Arr;
-                console.log(books4Arr.length + '4')
-              }
-            })
-        }
+      writeNewPost() {
+        let uuidBook = uuid.v1();
+        let userId = localStorage.getItem('id');
+        firebase.database().ref('users/' + userId + '/books/' + uuidBook).set({
+          title: this.title,
+          author: this.author,
+          genre: this.genre,
+          value: this.value,
+          selected: this.selected,
+          uuid: uuidBook
+        });
       },
       hidePopup: function () {
         this.$nextTick(() => {
@@ -245,5 +174,17 @@
 
   .modal-footer {
     display: none;
+  }
+  .popup-button {
+    background-color: transparent;
+    color: #00ff7f !important;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-color: #00ff7f;
+    padding: .5rem 3rem;
+  }
+  .popup {
+    background-color: #ccc !important;
+    color: #00ff7f;
   }
 </style>

@@ -1,10 +1,8 @@
 <template>
   <div class="footer">
-    <nav class="navbar navbar-light bg-light">
-      <span class="navbar-text">
-        2019 All rights reserved
-      </span>
-    </nav>
+    2019
+    <br>
+    All rights reserved
   </div>
 </template>
 
@@ -13,10 +11,15 @@
 </script>
 
 <style scoped>
-.footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #c2c2c2;
+    text-transform: uppercase;
+    font-size: .8rem;
+    padding-bottom: 1rem;
+  }
 </style>

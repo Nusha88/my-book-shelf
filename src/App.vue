@@ -28,6 +28,8 @@
     margin: 0 auto;
     position: relative;
     height: 100vh;
+    background-color: #000;
+    color: #c2c2c2;
   }
 
   h1, h2 {

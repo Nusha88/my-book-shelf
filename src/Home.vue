@@ -3,7 +3,32 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <h1 class="text-center">My Book Shelf</h1>
+          <div class="introduction">
+            <div class="introduction_block">
+              read
+              <br>
+              <br>
+              <span><i class="fas fa-book-reader"></i></span>
+            </div>
+            <div class="arrow">
+              <i class="fas fa-arrows-alt-h"></i>
+            </div>
+            <div class="introduction_block">
+              rate
+              <br>
+              <br>
+              <span><i class="fas fa-star"></i></span>
+            </div>
+            <div class="arrow">
+              <i class="fas fa-arrows-alt-h"></i>
+            </div>
+            <div class="introduction_block">
+              plan
+              <br>
+              <br>
+              <span><i class="fas fa-book-open"></i></span>
+            </div>
+          </div>
           <book-popup></book-popup>
           <book-shelf></book-shelf>
         </div>
@@ -29,5 +54,24 @@
 <style scoped>
   .container {
     margin: 1rem auto;
+  }
+  .introduction {
+    text-align: center;
+  }
+  .introduction div {
+    display: inline-block;
+    width: 19%;
+    padding: 2rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
+  .introduction_block {
+    border-top: 2px solid #00ff7f;
+  }
+  .introduction_block i {
+    font-size: 2.5rem;
+  }
+  .arrow {
+    color: #00ff7f;
   }
 </style>

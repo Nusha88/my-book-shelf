@@ -1,13 +1,9 @@
 <template>
   <div>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar">
       <router-link :to="{ name: 'Home'}">
-      <a class="navbar-brand">MyBookShelf</a>
+        <a class="navbar-brand">MyBookShelf</a>
       </router-link>
-      <form class="form-inline">
-        <button class="btn btn-outline-info my-2 my-sm-0" type="button">Log In</button>
-        <button class="btn btn-outline-warning my-2 my-sm-0" type="button">Register</button>
-      </form>
     </nav>
   </div>
 </template>
@@ -16,11 +12,14 @@
 
 </script>
 
-<style>
-  button {
-    margin-right: 1rem;
+<style scoped>
+  nav.navbar {
+    background-color: #000;
+    padding: 3rem 4rem 0 3rem;
   }
-  nav.navbar-light .navbar-brand {
-    color: #17a2b8;
+
+  nav.navbar .navbar-brand {
+    color: #00ff7f;
+    font-size: 2.5rem;
   }
 </style>
