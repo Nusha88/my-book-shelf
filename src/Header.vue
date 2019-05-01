@@ -22,4 +22,9 @@
     color: #00ff7f;
     font-size: 2.5rem;
   }
+  @media screen and (max-width: 990px) {
+    nav.navbar .navbar-brand {
+      font-size: 1rem;
+    }
+  }
 </style>

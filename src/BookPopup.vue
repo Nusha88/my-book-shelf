@@ -1,14 +1,11 @@
 <template>
-  <div class="text-center">
+  <div class="text-center modal-box">
     <b-button class="popup-button" v-b-modal.modal1>Add Book</b-button>
     <!-- Modal Component -->
     <b-modal id="modal1" title="Add Book" ref="modal">
-      <b-form-group>
+      <b-form-group id="mod">
         <b-row class="my-1">
-          <b-col sm="2">
-            <label for="title">Title:</label>
-          </b-col>
-          <b-col sm="10">
+          <b-col sm="12">
             <b-form-input
               id="title"
               size="sm"
@@ -19,10 +16,7 @@
           </b-col>
         </b-row>
         <b-row class="my-1">
-          <b-col sm="2">
-            <label for="author">Author:</label>
-          </b-col>
-          <b-col sm="10">
+          <b-col sm="12">
             <b-form-input
               id="author"
               size="sm"
@@ -33,10 +27,7 @@
           </b-col>
         </b-row>
         <b-row class="my-1">
-          <b-col sm="2">
-            <label for="genre">Genre:</label>
-          </b-col>
-          <b-col sm="10">
+          <b-col sm="12">
             <b-form-input
               id="genre"
               size="sm"
@@ -73,9 +64,9 @@
           ]"></i></div>
         </div>
       </b-form-group>
-      <div slot="modal-footer">
-        <b-btn variant="link" @click="hidePopup">Cancel</b-btn>
-        <b-btn variant="primary" @click="sendTheForm">Save</b-btn>
+      <div style="height: 3rem">
+        <b-btn variant="btn btn-outline-warning-popup" @click="hidePopup">Cancel</b-btn>
+        <b-btn variant="btn btn-outline-info-popup" @click="sendTheForm">Save</b-btn>
       </div>
     </b-modal>
   </div>
@@ -151,7 +142,7 @@
   }
 </script>
 
-<style scoped>
+<style>
   .red {
     color: red;
   }
@@ -183,8 +174,99 @@
     border-color: #00ff7f;
     padding: .5rem 3rem;
   }
-  .popup {
-    background-color: #ccc !important;
+  .popup-button:hover {
+    background-color: transparent;
+    border-color: #00ff7f;
+  }
+  .popup-button:focus {
+    box-shadow: none !important;
+    border-color: #00ff7f !important;
+    background-color: transparent !important;
+  }
+
+  .modal-box  .modal-content {
+    background-color: #333;
+  }
+
+  #mod input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid #00ff7f;
+    outline: none;
+    padding: 1.5rem 5px;
+    color: #fff;
+  }
+  #mod input:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  #mod #range-1 {
+    border: none;
+  }
+  .modal-box .modal-content .close {
+    color: red;
+    text-shadow: none;
+  }
+  #btnradios1 .btn.btn-secondary.active {
+    background-color: #00ff7f;
+    color: #000;
+  }
+  #btnradios1 .btn.btn-secondary.active:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .btn-outline-info-popup {
+    margin-right: 1rem;
+    background-color: #00ff7f;
+    color: #000;
+    font-weight: 700;
+    position: absolute;
+    right: 0;
+  }
+
+  .btn.btn-outline-info-popup:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .btn.btn-outline-info-popup {
+    color: #000;
+  }
+
+  .btn.btn-outline-info-popup:hover{
     color: #00ff7f;
+    background-color: transparent;
+    text-decoration: none;
+    box-shadow: none;
+    border-color: #00ff7f;
+  }
+  .btn.btn-outline-warning-popup:focus {
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
+    border-color: #00ff7f;
+    color: #00ff7f;
+  }
+  .btn-outline-warning-popup:hover {
+    color: #00ff7f;
+    background-color: transparent;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+
+  .btn-outline-warning-popup {
+    background-color: transparent;
+    border-color: #00ff7f;
+    color: #00ff7f;
+    position: absolute;
+    left: 1rem;
+  }
+
+  .btn.btn-outline-warning-popup:active {
+    background-color: transparent;
+    border-color: #00ff7f;
+    color: #00ff7f;
+    box-shadow: none;
   }
 </style>

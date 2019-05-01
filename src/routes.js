@@ -21,7 +21,10 @@ export const routes = [
     path: '/book-info/:id',
     name: 'BookInfo',
     props: true,
-    component: BookInfo
+    component: BookInfo,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/login',

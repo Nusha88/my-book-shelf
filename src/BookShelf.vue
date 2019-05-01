@@ -7,7 +7,7 @@
       <ul class="books">
         <li v-for="(book, n) in books"
             class="book"
-            @click="sendBook(book)"
+            @click="sendBook(book, n)"
             :class="[
             {planRead: book.selected==='Plan'},
       {fiveStars: book.value==='5'},
@@ -59,7 +59,7 @@
       {big_hor_width: n===22},
         ]">
           <router-link class="book-link" :to="{ name: 'BookInfo', params: { id: book.uuid }}">
-             <span>{{book.title}}</span>
+             <span>{{book.title.substring(0,15)}}</span>
           </router-link>
           <p class="close" @click="deleteBook(n)"><i class="far fa-times-circle"></i></p>
         </li>
@@ -127,13 +127,15 @@
       }
     },
     methods: {
-      sendBook(book) {
-        console.log(book);
+      sendBook(book, n) {
+        localStorage.setItem('book_id', book.uuid);
         eventBus.$emit('sendingBook', {
+          title: book.title,
           author: book.author,
           genre: book.genre,
           selected: book.selected,
-          value: book.value
+          value: book.value,
+          index: n
         })
       },
       deleteBook(n) {
@@ -141,20 +143,22 @@
         let userId = localStorage.getItem('id');
         let bookId;
         let bookArr = [];
-        var leadsRef = firebase.database().ref('users/' + userId + '/books');
-        leadsRef.once('value').then(function (snapshot) {
+        let bookArr2 = [];
+        var getBooks = firebase.database().ref('users/' + userId + '/books');
+        getBooks.once('value').then(function (snapshot) {
           snapshot.forEach(function (childSnapshot) {
             bookArr.push(childSnapshot.val());
           });
           let selectedBook = bookArr[n];
           bookId = selectedBook.uuid;
           firebase.database().ref('users/' + userId + '/books/' + bookId).remove();
+          localStorage.removeItem('book_id');
         });
-        leadsRef.once('value').then(function (snapshot) {
+        getBooks.once('value').then(function (snapshot) {
           snapshot.forEach(function (childSnapshot) {
-            bookArr.push(childSnapshot.val());
+            bookArr2.push(childSnapshot.val());
           });
-          this.books = bookArr;
+          this.books = bookArr2;
         });
       },
       logout: function () {
@@ -169,10 +173,11 @@
       });
     },
     created() {
+      localStorage.removeItem('book_id');
       let userId = localStorage.getItem('id');
       let bookArr = [];
-      var leadsRef = firebase.database().ref('users/' + userId + '/books');
-      leadsRef.once('value').then(function (snapshot) {
+      var getBooks = firebase.database().ref('users/' + userId + '/books');
+      getBooks.once('value').then(function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
           bookArr.push(childSnapshot.val());
         });
@@ -243,7 +248,7 @@
   }
 
   li.fiveStars {
-    background-color: red;
+    background-color: #FF0007;
   }
 
   li.fourStars {
@@ -266,8 +271,8 @@
     min-width: 180px;
     display: inline-block;
     position: absolute;
-    left: -79px;
-    bottom: 81px;
+    left: -74px;
+    bottom: 86px;
     -webkit-transform: rotate(-90deg);
   }
 
@@ -320,7 +325,6 @@
     width: 170px;
     position: absolute;
     bottom: 0;
-
   }
 
   .small_hor_width {
@@ -345,8 +349,17 @@
     margin-left: 8px;
     margin-right: 30px;
   }
+  .books .book.middle_height, .books .book.small_width.big_height, .books .book.big_width.big_height {
+    margin-bottom: 6px;
+  }
 
+  .books li.book.small_width span {
+    left: -78px;
+  }
 
+  .books li.book.big_width span {
+    left: -66px;
+  }
   .red {
     background-color: red;
   }
@@ -383,5 +396,110 @@
     display: block;
     min-width: 20px;
     min-height: 180px;
+    color: #000;
+    font-size: .8rem;
+    text-transform: uppercase;
+  }
+  @media all and (max-width: 1200px){
+    .big_hor_width {
+      width: 35px;
+      height: 170px !important;
+      top: 15%;
+    }
+  }
+
+    @media screen and (max-width: 990px) {
+    .top-link {
+      top: -3.5rem;
+    }
+    .shelf-container {
+      height: 260px;
+    }
+    .btn-outline-info {
+      font-size: .8rem;
+    }
+    ul {
+      top: 3rem;
+    }
+    li {
+      width: 20px;
+    }
+    li.big_width {
+      width: 35px !important;
+    }
+    .right_incline {
+      -ms-transform: rotate(-10deg); /* IE 9 */
+      -webkit-transform: rotate(-10deg); /* Safari 3-8 */
+      transform: rotate(-10deg);
+    }
+    .left_incline {
+      -ms-transform: rotate(10deg); /* IE 9 */
+      -webkit-transform: rotate(10deg); /* Safari 3-8 */
+      transform: rotate(10deg);
+    }
+    .ml {
+      margin-left: 12px;
+    }
+
+    .mr {
+      margin-right: 15px;
+    }
+    .book.right_incline.mr.middle_height {
+      margin-left: 0px;
+      margin-right: 17px;
+    }
+    .big_height {
+      height: 165px;
+    }
+    .middle_height {
+      height: 145px;
+    }
+    .big_hor_width {
+      width: 35px;
+      height: 170px !important;
+      top: 15%;
+    }
+    .book_markup {
+      margin-bottom: 2rem;
+    }
+    .book {
+      margin-bottom: 2rem;
+    }
+    li span {
+      left: -78px;
+    }
+    .books li.book.small_width span {
+      left: -77px;
+    }
+
+    .books li.book.big_width span {
+      left: -70px;
+    }
+    .close {
+      position: absolute;
+      top: 3px;
+      left: 0;
+      font-size: 1.3rem;
+      z-index: 1000;
+      color: #000;
+    }
+    .big_width .close{
+      left: 8px;
+    }
+
+    .small_width .close {
+      left: 0;
+    }
+    .books .book.middle_height, .books .book.small_width.big_height, .books .book.big_width.big_height {
+      margin-bottom: 39px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .shelf-container {
+      height: 500px;
+    }
+    .big_hor_width {
+      top: 59%;
+    }
   }
 </style>

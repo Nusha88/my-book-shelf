@@ -22,4 +22,10 @@
     font-size: .8rem;
     padding-bottom: 1rem;
   }
+  @media all and (max-width: 990px) {
+    .footer {
+      bottom: -54px;
+      background-color: #000;
+    }
+  }
 </style>

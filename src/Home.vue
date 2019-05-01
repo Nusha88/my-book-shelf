@@ -74,4 +74,16 @@
   .arrow {
     color: #00ff7f;
   }
+
+  @media all and (max-width: 390px) {
+    .introduction {
+      margin-bottom: 1rem;
+    }
+    .introduction div {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+  }
+
 </style>
