@@ -1,21 +1,30 @@
-import BookInfo from './BookInfo';
 import Home from './Home';
-import firebase from 'firebase'
 
+import BookInfo from './BookInfo';
 import Login from './Login'
 import SignUp from './SignUp'
 export const routes = [
   {
     path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: {
+      requiresAuth: true
+    }
   },
 
   {
-    path: '/book-info/:title',
+    path: '/book-info/:id',
     name: 'BookInfo',
     props: true,
-    component: BookInfo
+    component: BookInfo,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/login',
@@ -27,5 +36,10 @@ export const routes = [
     name: 'SignUp',
     component: SignUp
   },
+  {
+    path: '*',
+    redirect: '/login'
+  },
 ];
+
 

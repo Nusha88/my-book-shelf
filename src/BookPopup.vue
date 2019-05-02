@@ -1,14 +1,11 @@
 <template>
-  <div>
-    <b-button v-b-modal.modal1>Add Book</b-button>
+  <div class="text-center modal-box">
+    <b-button class="popup-button" v-b-modal.modal1>Add Book</b-button>
     <!-- Modal Component -->
     <b-modal id="modal1" title="Add Book" ref="modal">
-      <b-form-group>
+      <b-form-group id="mod">
         <b-row class="my-1">
-          <b-col sm="2">
-            <label for="title">Title:</label>
-          </b-col>
-          <b-col sm="10">
+          <b-col sm="12">
             <b-form-input
               id="title"
               size="sm"
@@ -19,10 +16,7 @@
           </b-col>
         </b-row>
         <b-row class="my-1">
-          <b-col sm="2">
-            <label for="author">Author:</label>
-          </b-col>
-          <b-col sm="10">
+          <b-col sm="12">
             <b-form-input
               id="author"
               size="sm"
@@ -33,10 +27,7 @@
           </b-col>
         </b-row>
         <b-row class="my-1">
-          <b-col sm="2">
-            <label for="genre">Genre:</label>
-          </b-col>
-          <b-col sm="10">
+          <b-col sm="12">
             <b-form-input
               id="genre"
               size="sm"
@@ -73,16 +64,20 @@
           ]"></i></div>
         </div>
       </b-form-group>
-      <div slot="modal-footer">
-        <b-btn variant="link" @click="hidePopup">Cancel</b-btn>
-        <b-btn variant="primary" @click="sendTheForm">Save</b-btn>
+      <div style="height: 3rem">
+        <b-btn variant="btn btn-outline-warning-popup" @click="hidePopup">Cancel</b-btn>
+        <b-btn variant="btn btn-outline-info-popup" @click="sendTheForm">Save</b-btn>
       </div>
     </b-modal>
   </div>
 </template>
 
 <script>
+  import {uuid} from 'vue-uuid';
+  import firebase from 'firebase';
+
   export default {
+
     data: function () {
       return {
         book: {
@@ -101,11 +96,7 @@
         ],
         title: '',
         author: '',
-        genre: '',
-        books1Arr: [],
-        books2Arr: [],
-        books3Arr: [],
-        books4Arr: []
+        genre: ''
       }
     },
     methods: {
@@ -120,41 +111,8 @@
           selected: this.selected,
           value: this.value
         };
-
-        this.checkBooksLenght();
-
         this.books.push(this.book);
-        if (this.books1Arr.length < 7) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books1.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else if (this.books2Arr.length < 3) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books2.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else if (this.books3Arr.length < 8) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books3.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else if (this.books4Arr.length < 5) {
-          this.$http.post('https://mybookshelf-2ad19.firebaseio.com/data/books4.json', this.book).then(response => {
-              console.log(response);
-            },
-            error => {
-              console.log(error)
-            });
-        } else {
-          alert("Your bookshelf is full! Delete something!")
-        }
+        this.writeNewPost();
 
         this.title = '';
         this.author = '';
@@ -163,55 +121,17 @@
         this.$root.$emit('addBook', this.book);
         this.hidePopup();
       },
-      checkBooksLenght() {
-        this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books1.json').then(response => {
-          return response.json();
-        })
-          .then(data => {
-            const books1Arr = [];
-            for (let i in data) {
-              books1Arr.push(data[i]);
-              this.books1Arr = books1Arr;
-              console.log(books1Arr.length + '1');
-            }
-          });
-        if (this.books1Arr.length = 7) {
-          this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books2.json').then(response => {
-            return response.json();
-          })
-            .then(data2 => {
-              const books2Arr = [];
-              for (let i in data2) {
-                books2Arr.push(data2[i]);
-                this.books2Arr = books2Arr;
-                console.log(books2Arr.length + '2')
-              }
-            })
-        } else if (this.books2Arr.length = 3) {
-          this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books3.json').then(response => {
-            return response.json();
-          })
-            .then(data3 => {
-              const books3Arr = [];
-              for (let i in data3) {
-                books3Arr.push(data3[i]);
-                this.books3Arr = books3Arr;
-                console.log(books3Arr.length + '3')
-              }
-            })
-        } else if (this.books3Arr.length = 8) {
-          this.$http.get('https://mybookshelf-2ad19.firebaseio.com/data/books4.json').then(response => {
-            return response.json();
-          })
-            .then(data4 => {
-              const books4Arr = [];
-              for (let i in data4) {
-                books4Arr.push(data4[i]);
-                this.books4Arr = books4Arr;
-                console.log(books4Arr.length + '4')
-              }
-            })
-        }
+      writeNewPost() {
+        let uuidBook = uuid.v1();
+        let userId = localStorage.getItem('id');
+        firebase.database().ref('users/' + userId + '/books/' + uuidBook).set({
+          title: this.title,
+          author: this.author,
+          genre: this.genre,
+          value: this.value,
+          selected: this.selected,
+          uuid: uuidBook
+        });
       },
       hidePopup: function () {
         this.$nextTick(() => {
@@ -222,7 +142,7 @@
   }
 </script>
 
-<style scoped>
+<style>
   .red {
     color: red;
   }
@@ -245,5 +165,108 @@
 
   .modal-footer {
     display: none;
+  }
+  .popup-button {
+    background-color: transparent;
+    color: #00ff7f !important;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-color: #00ff7f;
+    padding: .5rem 3rem;
+  }
+  .popup-button:hover {
+    background-color: transparent;
+    border-color: #00ff7f;
+  }
+  .popup-button:focus {
+    box-shadow: none !important;
+    border-color: #00ff7f !important;
+    background-color: transparent !important;
+  }
+
+  .modal-box  .modal-content {
+    background-color: #333;
+  }
+
+  #mod input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid #00ff7f;
+    outline: none;
+    padding: 1.5rem 5px;
+    color: #fff;
+  }
+  #mod input:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  #mod #range-1 {
+    border: none;
+  }
+  .modal-box .modal-content .close {
+    color: red;
+    text-shadow: none;
+  }
+  #btnradios1 .btn.btn-secondary.active {
+    background-color: #00ff7f;
+    color: #000;
+  }
+  #btnradios1 .btn.btn-secondary.active:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .btn-outline-info-popup {
+    margin-right: 1rem;
+    background-color: #00ff7f;
+    color: #000;
+    font-weight: 700;
+    position: absolute;
+    right: 0;
+  }
+
+  .btn.btn-outline-info-popup:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .btn.btn-outline-info-popup {
+    color: #000;
+  }
+
+  .btn.btn-outline-info-popup:hover{
+    color: #00ff7f;
+    background-color: transparent;
+    text-decoration: none;
+    box-shadow: none;
+    border-color: #00ff7f;
+  }
+  .btn.btn-outline-warning-popup:focus {
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
+    border-color: #00ff7f;
+    color: #00ff7f;
+  }
+  .btn-outline-warning-popup:hover {
+    color: #00ff7f;
+    background-color: transparent;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+
+  .btn-outline-warning-popup {
+    background-color: transparent;
+    border-color: #00ff7f;
+    color: #00ff7f;
+    position: absolute;
+    left: 1rem;
+  }
+
+  .btn.btn-outline-warning-popup:active {
+    background-color: transparent;
+    border-color: #00ff7f;
+    color: #00ff7f;
+    box-shadow: none;
   }
 </style>

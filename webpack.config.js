@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+require('file-loader?name=[name].[ext]!../index.html');
 
 module.exports = {
   entry: './src/main.js',
